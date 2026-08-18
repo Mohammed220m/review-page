@@ -21,27 +21,36 @@
         }
         .card {
             background: #ffffff;
-            padding: 30px 25px;
+            padding: 35px 25px;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.08);
             text-align: center;
-            max-width: 400px;
+            max-width: 420px;
             width: 100%;
+        }
+        .logo-placeholder {
+            font-size: 45px;
+            margin-bottom: 15px;
         }
         h2 {
             color: #333;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             font-size: 22px;
+        }
+        p.subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
         }
         .stars-container {
             display: flex;
             justify-content: center;
-            direction: ltr; /* لترتيب النجوم من اليسار لليمين */
-            gap: 8px;
+            direction: ltr;
+            gap: 10px;
             margin-bottom: 20px;
         }
         .star {
-            font-size: 40px;
+            font-size: 42px;
             color: #ccc;
             cursor: pointer;
             transition: color 0.2s, transform 0.1s;
@@ -49,46 +58,49 @@
         }
         .star:hover, .star.active {
             color: #ffca28;
-            transform: scale(1.1);
+            transform: scale(1.15);
         }
         #feedback-box {
             display: none;
             margin-top: 20px;
+            text-align: right;
             animation: fadeIn 0.4s ease-in-out;
         }
         p.note {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 12px;
+            color: #555;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
         }
         textarea {
             width: 100%;
-            height: 100px;
+            height: 110px;
             padding: 12px;
             border: 1px solid #ddd;
-            border-radius: 10px;
+            border-radius: 12px;
             resize: none;
             font-size: 14px;
             outline: none;
             margin-bottom: 15px;
+            transition: border-color 0.2s;
         }
         textarea:focus {
-            border-color: #25D366;
+            border-color: #ffca28;
         }
         .send-btn {
-            background-color: #25D366;
+            background-color: #1a1a1a;
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 13px;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
             width: 100%;
             transition: background 0.3s;
         }
         .send-btn:hover {
-            background-color: #1eb954;
+            background-color: #333333;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
@@ -99,7 +111,9 @@
 <body>
 
 <div class="card">
+    <div class="logo-placeholder">⭐</div>
     <h2 id="title">كيف كانت تجربتك معنا اليوم؟</h2>
+    <p class="subtitle">رأيك يهمنا لتطوير خدماتنا باستمرار</p>
     
     <!-- النجوم -->
     <div class="stars-container">
@@ -112,22 +126,22 @@
 
     <!-- صندوق الملاحظات للتقييمات 3 أو أقل -->
     <div id="feedback-box">
-        <p class="note">نأسف لعدم رضاك التام، يرجى إخبارنا بلاحظاتك لنتمكن من التحسين:</p>
-        <textarea id="feedback-text" placeholder="اكتب ملاحظتك هنا..."></textarea>
+        <p class="note">يرجى توضيح سبب عدم رضاك لنتمكن من معالجته وتطوير الخدمة:</p>
+        <textarea id="feedback-text" placeholder="اكتب ملاحظاتك هنا بكل شفافية..."></textarea>
         <button class="send-btn" onclick="sendFeedback()">إرسال الملاحظة للإدارة</button>
     </div>
 </div>
 
 <script>
     // ==========================================
-    // إعدادات المحل
+    // إعدادات المحل والروابط
     // ==========================================
     const config = {
-        // رابط تقييم قوقل المباشر للمحل
-        googleReviewLink: "https://search.google.com/local/ChIJ9x7ku0SvST4Re6CKLuh3pYE",
+        // رابط تقييم قوقل المباشر (لـ 4 و 5 نجوم)
+        googleReviewLink: "https://search.google.com/local/writereview?placeid=ChIJsbuai7OvST4RpLgV8m105B4",
         
-        // رقم واتساب مالك المحل مع رمز الدولة (بدون + أو أصفار في البداية)
-        whatsappNumber: "97336636050" 
+        // ضع رابط Google Form الخاص بك بين علامتي التنصيص (لـ 1 و 2 و 3 نجوم)
+        googleFormUrl: "https://docs.google.com/spreadsheets/d/1tpLG_x98aTsYjSs6QRGtqZEIAgsy1zzRSHQWys7umZg/edit?usp=sharing"
     };
 
     let selectedRating = 0;
@@ -146,8 +160,7 @@
             }
         });
 
-        // الشروط:
-        // إذا اختار 4 أو 5 نجوم -> تحويل مباشر لقوقل
+        // إذا اختار 4 أو 5 نجوم -> تحويل مباشر لتقييم قوقل
         if (starsCount >= 4) {
             feedbackBox.style.display = "none";
             setTimeout(() => {
@@ -167,12 +180,13 @@
             return;
         }
 
-        // تجهيز رسالة الواتساب
-        const message = `مرحباً، لدي ملاحظة على الخدمة (تقييم ${selectedRating} من 5 نجوم):%0A${encodeURIComponent(text)}`;
-        const whatsappUrl = `https://wa.me/${config.whatsappNumber}?text=${message}`;
-
-        // التوجيه إلى الواتساب
-        window.location.href = whatsappUrl;
+        // التوجيه إلى Google Form للحفظ في شيت الإكسل
+        if (config.googleFormUrl && config.googleFormUrl !== "ضع_رابط_GOOGLE_FORM_هنا") {
+            alert("شكراً لك! تم إرسال ملاحظتك إلى إدارة المحل بنجاح.");
+            window.location.href = config.googleFormUrl;
+        } else {
+            alert("يرجى وضع رابط Google Form في الكود أولاً.");
+        }
     }
 </script>
 
