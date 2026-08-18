@@ -1,17 +1,16 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" id="html-root">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تقييم الخدمة | Rate Our Service</title>
+    <title>تقييم الخدمة</title>
     <style>
         * {
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
         body {
             background-color: #f4f6f9;
             display: flex;
@@ -20,257 +19,160 @@
             min-height: 100vh;
             padding: 20px;
         }
-
-        .container {
+        .card {
             background: #ffffff;
-            padding: 40px 25px 35px 25px;
+            padding: 30px 25px;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.08);
             text-align: center;
+            max-width: 400px;
             width: 100%;
-            max-width: 420px;
-            position: relative;
         }
-
-        /* زر تبديل اللغة */
-        .lang-btn {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: #f0f0f0;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: bold;
-            color: #555;
-            transition: 0.3s;
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 22px;
         }
-        html[dir="ltr"] .lang-btn {
-            left: auto;
-            right: 15px;
-        }
-        .lang-btn:hover {
-            background: #e0e0e0;
-        }
-
-        .title {
-            color: #2c3e50;
-            font-size: 20px;
-            font-weight: 700;
-            margin-top: 15px;
-            margin-bottom: 25px;
-        }
-
-        /* أزرار الخيارات الرئيسية */
-        .action-btn {
+        .stars-container {
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 10px;
-            width: 100%;
-            padding: 16px;
-            border-radius: 12px;
-            border: none;
-            font-size: 16px;
-            font-weight: bold;
+            direction: ltr; /* لترتيب النجوم من اليسار لليمين */
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .star {
+            font-size: 40px;
+            color: #ccc;
             cursor: pointer;
-            margin-bottom: 15px;
-            transition: transform 0.2s, background-color 0.2s;
+            transition: color 0.2s, transform 0.1s;
+            user-select: none;
         }
-
-        .action-btn:active {
-            transform: scale(0.98);
+        .star:hover, .star.active {
+            color: #ffca28;
+            transform: scale(1.1);
         }
-
-        .btn-positive {
-            background-color: #FFB800;
-            color: #fff;
-        }
-
-        .btn-positive:hover {
-            background-color: #e0a200;
-        }
-
-        .btn-negative {
-            background-color: #f1f3f5;
-            color: #495057;
-            border: 1px solid #ced4da;
-        }
-
-        .btn-negative:hover {
-            background-color: #e9ecef;
-        }
-
-        /* قسم التقييم المنخفض */
-        #feedback-section {
+        #feedback-box {
             display: none;
             margin-top: 20px;
             animation: fadeIn 0.4s ease-in-out;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .feedback-note {
+        p.note {
             color: #666;
             font-size: 14px;
             margin-bottom: 12px;
-            line-height: 1.5;
         }
-
         textarea {
             width: 100%;
-            height: 90px;
+            height: 100px;
             padding: 12px;
             border: 1px solid #ddd;
             border-radius: 10px;
             resize: none;
             font-size: 14px;
-            margin-bottom: 15px;
             outline: none;
-            transition: border-color 0.3s;
+            margin-bottom: 15px;
         }
-
         textarea:focus {
             border-color: #25D366;
         }
-
-        .submit-btn {
+        .send-btn {
             background-color: #25D366;
             color: white;
             border: none;
-            padding: 14px;
+            padding: 12px 20px;
             border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
             font-size: 16px;
             font-weight: bold;
-            transition: background-color 0.3s;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
         }
-
-        .submit-btn:hover {
-            background-color: #1eb857;
+        .send-btn:hover {
+            background-color: #1eb954;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- زر تغيير اللغة -->
-    <button class="lang-btn" onclick="toggleLanguage()" id="lang-toggle-btn">English</button>
-
-    <!-- العنوان والسؤال -->
-    <p class="title" id="question-text">كيف كانت تجربتك معنا اليوم؟</p>
+<div class="card">
+    <h2 id="title">كيف كانت تجربتك معنا اليوم؟</h2>
     
-    <!-- الأزرار المباشرة -->
-    <button class="action-btn btn-positive" onclick="goToGoogle()" id="btn-positive">
-        ⭐ تجربة ممتازة (تقييم قوقل)
-    </button>
-    
-    <button class="action-btn btn-negative" onclick="showFeedback()" id="btn-negative">
-        💬 لدي ملاحظة أو شكوى
-    </button>
+    <!-- النجوم -->
+    <div class="stars-container">
+        <span class="star" onclick="rate(1)">★</span>
+        <span class="star" onclick="rate(2)">★</span>
+        <span class="star" onclick="rate(3)">★</span>
+        <span class="star" onclick="rate(4)">★</span>
+        <span class="star" onclick="rate(5)">★</span>
+    </div>
 
-    <!-- نموذج الشكوى أو الملاحظات -->
-    <div id="feedback-section">
-        <p class="feedback-note" id="feedback-note">نأسف لعدم رضاك التام، يرجى إخبارنا بالسبب لنتمكن من خدمتك بشكل أفضل:</p>
-        <textarea id="feedback-text" placeholder="اكتب ملاحظاتك هنا..."></textarea>
-        <button class="submit-btn" onclick="sendWhatsApp()" id="submit-btn">إرسال للإدارة عبر الواتساب</button>
+    <!-- صندوق الملاحظات للتقييمات 3 أو أقل -->
+    <div id="feedback-box">
+        <p class="note">نأسف لعدم رضاك التام، يرجى إخبارنا بلاحظاتك لنتمكن من التحسين:</p>
+        <textarea id="feedback-text" placeholder="اكتب ملاحظتك هنا..."></textarea>
+        <button class="send-btn" onclick="sendFeedback()">إرسال الملاحظة للإدارة</button>
     </div>
 </div>
 
 <script>
     // ==========================================
-    // 1. الإعدادات الخاصة بالمحل
+    // إعدادات المحل
     // ==========================================
-    const storeInfo = {
+    const config = {
+        // رابط تقييم قوقل المباشر للمحل
         googleReviewLink: "https://search.google.com/local/writereview?placeid=ChIJsbuai7OvST4RpLgV8m105B4",
-        whatsappNumber: "97336636050" // رقم الواتساب المخصص للشكاوى
-    };
-
-   // ==========================================
-    // 2. النصوص باللغتين
-    // ==========================================
-    const translations = {
-        ar: {
-            langBtn: "English",
-            question: "كيف كانت تجربتك معنا اليوم؟",
-            btnPositive: "⭐ تجربة ممتازة (تقييم قوقل)",
-            btnNegative: "💬 لدي ملاحظة أو شكوى",
-            feedbackNote: "نأسف لعدم رضاك التام، يرجى إخبارنا بالسبب لنتمكن من خدمتك بشكل أفضل:",
-            placeholder: "اكتب ملاحظاتك هنا...",
-            submitBtn: "إرسال للإدارة عبر الواتساب",
-            alertText: "الرجاء كتابة ملاحظاتك قبل الإرسال.",
-            waMsgHeader: "مرحباً، لدي ملاحظة على الخدمة:"
-        },
-        en: {
-            langBtn: "عربي",
-            question: "How was your experience with us today?",
-            btnPositive: "⭐ Excellent Experience (Google Review)",
-            btnNegative: "💬 I have a complaint or note",
-            feedbackNote: "We are sorry for not meeting your expectations. Please let us know how we can improve:",
-            placeholder: "Write your feedback here...",
-            submitBtn: "Send Feedback via WhatsApp",
-            alertText: "Please write your feedback before sending.",
-            waMsgHeader: "Hello, I have feedback regarding the service:"
-        }
-    };
-
-    let currentLang = 'ar';
-
-    // مفتاح تبديل اللغة
-    function toggleLanguage() {
-        const htmlRoot = document.getElementById('html-root');
         
-        if (currentLang === 'ar') {
-            currentLang = 'en';
-            htmlRoot.setAttribute('dir', 'ltr');
-            htmlRoot.setAttribute('lang', 'en');
-        } else {
-            currentLang = 'ar';
-            htmlRoot.setAttribute('dir', 'rtl');
-            htmlRoot.setAttribute('lang', 'ar');
+        // رقم واتساب مالك المحل مع رمز الدولة (بدون + أو أصفار في البداية)
+        whatsappNumber: "973xxxxxxxx" 
+    };
+
+    let selectedRating = 0;
+    const stars = document.querySelectorAll('.star');
+    const feedbackBox = document.getElementById('feedback-box');
+
+    function rate(starsCount) {
+        selectedRating = starsCount;
+        
+        // تلوين النجوم المختارة
+        stars.forEach((star, index) => {
+            if (index < starsCount) {
+                star.classList.add('active');
+            } else {
+                star.classList.remove('active');
+            }
+        });
+
+        // الشروط:
+        // إذا اختار 4 أو 5 نجوم -> تحويل مباشر لقوقل
+        if (starsCount >= 4) {
+            feedbackBox.style.display = "none";
+            setTimeout(() => {
+                window.location.href = config.googleReviewLink;
+            }, 300);
+        } 
+        // إذا اختار 3 أو أقل -> إظهار مربع كتابة الملاحظة
+        else {
+            feedbackBox.style.display = "block";
         }
-
-        // تحديث نصوص الواجهة
-        const t = translations[currentLang];
-        document.getElementById('lang-toggle-btn').innerText = t.langBtn;
-        document.getElementById('question-text').innerText = t.question;
-        document.getElementById('btn-positive').innerText = t.btnPositive;
-        document.getElementById('btn-negative').innerText = t.btnNegative;
-        document.getElementById('feedback-note').innerText = t.feedbackNote;
-        document.getElementById('feedback-text').placeholder = t.placeholder;
-        document.getElementById('submit-btn').innerText = t.submitBtn;
     }
 
-    // التوجه لقوقل مباشرة عند اختيار تجربة ممتازة
-    function goToGoogle() {
-        window.location.href = storeInfo.googleReviewLink;
-    }
-
-    // إظهار نموذج الشكوى
-    function showFeedback() {
-        document.getElementById('feedback-section').style.display = 'block';
-    }
-
-    // إرسال عبر الواتساب
-    function sendWhatsApp() {
-        let feedback = document.getElementById('feedback-text').value;
-        const t = translations[currentLang];
-
-        if (feedback.trim() === "") {
-            alert(t.alertText);
+    function sendFeedback() {
+        const text = document.getElementById('feedback-text').value.trim();
+        if (!text) {
+            alert("يرجى كتابة ملاحظتك قبل الإرسال.");
             return;
         }
-        
-        let message = `${t.waMsgHeader}%0a${feedback}`;
-        let whatsappLink = `https://wa.me/${storeInfo.whatsappNumber}?text=${message}`;
-        
-        window.location.href = whatsappLink;
+
+        // تجهيز رسالة الواتساب
+        const message = `مرحباً، لدي ملاحظة على الخدمة (تقييم ${selectedRating} من 5 نجوم):%0A${encodeURIComponent(text)}`;
+        const whatsappUrl = `https://wa.me/${config.whatsappNumber}?text=${message}`;
+
+        // التوجيه إلى الواتساب
+        window.location.href = whatsappUrl;
     }
 </script>
 
